@@ -48,9 +48,9 @@ class SQLError: public std::exception {
 
   SQLError& operator=(SQLError const&) noexcept = default;
 
-  const char* what() const noexcept override { return GetErrorTypeDescription(error_); }
+  [[nodiscard]] const char* what() const noexcept override { return GetErrorTypeDescription(error_); }
 
-  ErrorTypes GetErrorType() const {
+  [[nodiscard]] ErrorTypes GetErrorType() const {
     return error_;
   }
 
@@ -66,9 +66,9 @@ class DBError: public std::exception {
 
   DBError& operator=(DBError const&) noexcept = default;
 
-  const char* what() const noexcept override { return GetErrorTypeDescription(error_); }
+  [[nodiscard]] const char* what() const noexcept override { return GetErrorTypeDescription(error_); }
 
-  ErrorTypes GetErrorType() const {
+  [[nodiscard]] ErrorTypes GetErrorType() const {
     return error_;
   }
 

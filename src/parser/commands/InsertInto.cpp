@@ -46,7 +46,7 @@ std::vector<Row> Parser::ParseRows(std::pair<std::vector<Column>, std::vector<si
     token = lexer_.GetNextToken();
 
     if (token.type == TOKEN_SEMI) return rows;
-    if (token.type != TOKEN_COMMA) throw SQLError(SYNTAX_ERROR);;
+    if (token.type != TOKEN_COMMA) throw SQLError(SYNTAX_ERROR);
   }
 }
 
@@ -59,7 +59,7 @@ Row Parser::ParseRow(std::pair<std::vector<Column>, std::vector<size_t>>& column
       if (VectorContains(table.columns[i].attributes, NOT_NULL)) {
         throw SQLError(COLUMN_IS_NOT_NULL);
       }
-      row.fields.emplace_back();
+      row.fields.emplace_back(Nil());
       ++i;
     }
 
@@ -73,7 +73,7 @@ Row Parser::ParseRow(std::pair<std::vector<Column>, std::vector<size_t>>& column
         if (VectorContains(table.columns[i].attributes, NOT_NULL)) {
           throw SQLError(COLUMN_IS_NOT_NULL);
         }
-        row.fields.emplace_back();
+        row.fields.emplace_back(Nil());
         ++i;
       }
       break;

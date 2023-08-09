@@ -25,7 +25,7 @@ static std::pair<std::vector<Column>, std::vector<size_t>> FindColumnsByName(con
   return result;
 }
 
-// Returns map where key is name and value is a pair of column with this name and it's index.
+// Returns map where key is name and value is a pair of column with this name, and it's index.
 static std::map<std::string, std::pair<Column, size_t>> GetColumnsMap(const std::vector<Column>& columns) {
   std::map<std::string, std::pair<Column, size_t>> result;
 

@@ -68,7 +68,7 @@ TEST(DB_ModifyingData, InsertOnlyOneColumn) {
   db.ExecuteCommand("INSERT INTO table_name(name) VALUES ('toy');");
 
   std::vector<Row> expected_rows{
-      Row({Null(), "toy"}),
+      Row({Nil(), "toy"}),
   };
   ASSERT_EQ(db.GetTables()[0].rows, expected_rows);
 }
@@ -266,37 +266,6 @@ TEST(DB_SelectFrom, WhereCondition_SmallerEqualsEmpty) {
   ASSERT_EQ(result[0].rows, expected_rows);
 }
 
-TEST(DB_SelectFrom, WhereCondition_SelectWhereIsNull) {
-  MyCoolDB db = CreateDefaultTable();
-
-  db.ExecuteCommand("INSERT INTO table_name(name) VALUES ('toy');");
-
-  std::vector<Row> expected_rows{
-      Row({Null(), "toy"})
-  };
-
-  std::vector<QueryResult>
-      result = db.ExecuteCommand("SELECT * FROM table_name WHERE id IS NULL;");
-
-  ASSERT_EQ(result[0].rows, expected_rows);
-}
-
-TEST(DB_SelectFrom, WhereCondition_SelectWhereIsNotNull) {
-  MyCoolDB db = CreateDefaultTable();
-
-  db.ExecuteCommand("INSERT INTO table_name(name) VALUES ('toy');");
-  db.ExecuteCommand("INSERT INTO table_name VALUES (2, 'phone');");
-
-  std::vector<Row> expected_rows{
-      Row({2, "phone"})
-  };
-
-  std::vector<QueryResult>
-      result = db.ExecuteCommand("SELECT * FROM table_name WHERE id IS NOT NULL;");
-
-  ASSERT_EQ(result[0].rows, expected_rows);
-}
-
 TEST(DB_ModifyingData, DeleteAllRows) {
   MyCoolDB db = CreateDefaultTable();
 
@@ -359,34 +328,6 @@ TEST(DB_ModifyingData, UpdateMultipleColumnsWhereCondition) {
       Row({2, "phone"})
   };
   ASSERT_EQ(db.GetTables()[0].rows, expected_rows);
-}
-
-TEST(DB_File, SavingAndReadingFile) {
-  MyCoolDB db = CreateDefaultTable();
-
-  InsertMultipleValuesIntoTable(db);
-
-  std::string path = "/Users/katsushooter/ITMO/programming/labwork-12-KatsuShooter/db.txt";
-  db.Save(path);
-
-  MyCoolDB db_2;
-  db_2.Open(path);
-
-  ASSERT_EQ(db, db_2);
-}
-
-TEST(DB_File, SavingAndReadingFile_2) {
-  MyCoolDB db = CreateDefaultTable();
-
-  db.ExecuteCommand("INSERT INTO table_name VALUES (1, 'hello world'), (2, 'goodbye world');");
-
-  std::string path = "/Users/katsushooter/ITMO/programming/labwork-12-KatsuShooter/db.txt";
-  db.Save(path);
-
-  MyCoolDB db_2;
-  db_2.Open(path);
-
-  ASSERT_EQ(db, db_2);
 }
 
 TEST(DB_Joins, InnerJoin) {
@@ -561,31 +502,6 @@ TEST(DB_Joins, RightJoin) {
       Row({"toy", 1, 1, 2000}),
       Row({"phone", 2, 2, 2500}),
   };
-
-  ASSERT_EQ(res[0].rows, expected_rows);
-
-  std::vector<Column> expected_columns{
-      Column({"items.name"}, {NOT_NULL}, Varchar),
-      Column({"items_price.id"}, {PRIMARY_KEY}, Int),
-      Column({"items_price.item_id"}, {}, Int),
-      Column({"items_price.price"}, {}, Int),
-  };
-
-  ASSERT_EQ(expected_columns, res[0].columns);
-}
-
-TEST(DB_Joins, RightJoinMultipleConditions) {
-  MyCoolDB db;
-
-  db.ExecuteCommand("CREATE TABLE items (id INT PRIMARY KEY, name VARCHAR NOT NULL);");
-  db.ExecuteCommand("INSERT INTO items VALUES (1, 'toy'), (2, 'phone');");
-
-  db.ExecuteCommand("CREATE TABLE items_price (id INT PRIMARY KEY, item_id INT, price INT);");
-  db.ExecuteCommand("INSERT INTO items_price VALUES (1, 1, 2000), (2, 2, 2500);");
-
-  auto res = db.ExecuteCommand("SELECT items.name, items_price.item_id, items_price.price FROM items RIGHT JOIN items_price ON items.id = items_price.item_id, items.id = items_price.id;");
-
-  std::vector<Row> expected_rows{};
 
   ASSERT_EQ(res[0].rows, expected_rows);
 

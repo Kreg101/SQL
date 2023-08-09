@@ -1,3 +1,4 @@
+#pragma once
 #include "Row.h"
 #include "Column.h"
 

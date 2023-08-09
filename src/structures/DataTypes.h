@@ -1,3 +1,4 @@
+#pragma once
 #include "Errors.h"
 #include <string>
 #include <ostream>

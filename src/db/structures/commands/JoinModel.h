@@ -1,3 +1,4 @@
+#pragma once
 #include "../Column.h"
 #include "BaseModels.h"
 #include "../JoinType.h"
