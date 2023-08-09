@@ -1,0 +1,55 @@
+#include <string>
+#include <vector>
+
+enum ComparisonOperator {
+  COMPARISON_EQUALS,
+  COMPARISON_BIGGER,
+  COMPARISON_BIGGER_EQUALS,
+  COMPARISON_SMALLER,
+  COMPARISON_SMALLER_EQUALS,
+  COMPARISON_NOT_EQUALS,
+  COMPARISON_IS_NULL,
+  COMPARISON_IS_NOT_NULL,
+};
+
+static ComparisonOperator GetComparisonOperatorFromString(std::string& string) {
+  if (string == "=") {
+    return COMPARISON_EQUALS;
+  } else if (string == "!=") {
+    return COMPARISON_NOT_EQUALS;
+  } else if (string == ">") {
+    return COMPARISON_BIGGER;
+  } else if (string == ">=") {
+    return COMPARISON_BIGGER_EQUALS;
+  } else if (string == "<") {
+    return COMPARISON_SMALLER;
+  } else if (string == "<=") {
+    return COMPARISON_SMALLER_EQUALS;
+  } else if (string == "IS NULL") {
+    return COMPARISON_IS_NULL;
+  } else if (string == "IS NOT NULL") {
+    return COMPARISON_IS_NOT_NULL;
+  }
+
+  else {
+    throw SQLError(UNKNOWN_COMPARISON_OPERATOR);
+  }
+}
+
+enum ConditionTypes {
+  CONDITION_AND,
+  CONDITION_OR,
+  CONDITION_BRACE
+};
+
+struct Operand {
+  std::string field;
+  std::string value;
+  ComparisonOperator comparison_operator;
+};
+
+struct Condition {
+  ConditionTypes type;
+  std::vector<Operand> operands;
+};
+
